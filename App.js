@@ -26,10 +26,10 @@ const HomeScreen = () => {
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text style={{ fontSize: 40, fontWeight: "bold" }}>메인 화면</Text>
       <Button
-        title="상세 화면으로 이동"
+        title="할일 리스트 이동"
         onPress={() => {
           // 네비게이션을 통해 Detail 화면으로 이동
-          navigation.navigate("Detail");
+          navigation.navigate("TodoList");
         }}
       />
       <Button
@@ -88,29 +88,29 @@ const TodoWriteScreen = ({ navigation, route }) => {
   );
 };
 
-const DetailScreen = ({ navigation, route }) => {
-  const todo = route?.params?.todo ?? "(내용 없음)";
-
+const TodoSearchScreen = () => {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text style={{ fontSize: 40, fontWeight: "bold" }}>상세 화면</Text>
-      <Text> 작성 내용: {todo}</Text>
-      <Button
-        title="홈으로 이동"
-        onPress={() => {
-          // 네비게이션을 통해 Detail 화면으로 이동
-          navigation.navigate("Home");
-        }}
-      />
-      <Button
-        title="상세 페이지로 이동"
-        onPress={() => {
-          navigation.navigate("Detail");
-        }}
-      />
+      <Text style={{ fontSize: 40, fontWeight: "bold" }}>검색 화면</Text>
     </View>
-  );
-};
+  )
+}
+
+const TodoListScreen = () => {
+  return (
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Text style={{ fontSize: 40, fontWeight: "bold" }}>할일 리스트</Text>
+    </View>
+  )
+}
+
+const MyPageScreen = () => {
+  return (
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Text style={{ fontSize: 40, fontWeight: "bold" }}>내 정보</Text>
+    </View>
+  )
+}
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -143,7 +143,7 @@ export default function App() {
         <Stack.Screen name="Detail" component={DetailScreen} />
       </Stack.Navigator> */}
       <Tab.Navigator
-        screenOptions={{
+        screenOptions={({route}) => ({
           tabBarLabelStyle: {
             fontSize: 12,
             paddingBottom: 10,
@@ -154,25 +154,41 @@ export default function App() {
           },
           tabBarInactiveTintColor: "#0163d2",
           tabBarActiveTintColor: "black",
-          headerRight: () => (
-            <Pressable onPress={() => alert("클릭됨!!")}>
-              <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>
-                Menu
-              </Text>
-            </Pressable>
-          ),
-        }}
+          tabBarIcon: ({color, size}) => {
+            let iconName;
+            
+            if (route.name === "Home") {
+              iconName = "home-variant";
+          } else if (route.name === "TodoSearch") {
+              iconName = "text-search";
+          } else if (route.name === "TodoWrite") {
+              iconName = "note-edit";
+          } else if (route.name === "TodoList") {
+              iconName = "view-list";
+          } else if (route.name === "MyPage") {
+              iconName = "account-circle";
+          } 
+
+          return <MaterialCommunityIcons 
+          name={iconName} 
+          size={size} 
+          color={color} 
+          />;
+        },
+        })}
       >
         <Tab.Screen
           name="Home"
           component={HomeScreen}
           options={{
             title: "메인 홈",
-            tabBarIcon: ({ focused }) => (
-              <Entypo name="home" 
-              size={24} 
-              color="black" />
-            ),
+          }}
+        />
+        <Tab.Screen
+          name="TodoSearch"
+          component={TodoSearchScreen}
+          options={{
+            name: "할 일 검색",
           }}
         />
         <Tab.Screen
@@ -180,13 +196,20 @@ export default function App() {
           component={TodoWriteScreen}
           options={{
             name: "할 일 작성",
-            tabBarIcon: ({ focused }) => (
-              <MaterialCommunityIcons
-                name="square-edit-outline"
-                size={30}
-                color="black"
-              />
-            ),
+          }}
+        />
+        <Tab.Screen
+          name="TodoList"
+          component={TodoListScreen}
+          options={{
+            name: "할 일 리스트트",
+          }}
+        />
+        <Tab.Screen
+          name="MyPage"
+          component={MyPageScreen}
+          options={{
+            name: "내 정보보",
           }}
         />
       </Tab.Navigator>
