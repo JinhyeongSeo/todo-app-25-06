@@ -1,5 +1,6 @@
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, Pressable, route } from 'react-native';
 import { createStaticNavigation, NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -17,19 +18,72 @@ const HomeScreen = () => {
           navigation.navigate('Detail');
         }}
       />
+      <Button
+        title="할 일 작성"
+        onPress={() => {
+          // 네비게이션을 통해 Detail 화면으로 이동
+          navigation.navigate('TodoWrite');
+        }}
+      />
     </View>
   );
+};
+
+const TodoWriteScreen = ({ navigation, route}) => {
+  const [todo, setTodo] = React.useState('');
+
+  return (
+    <>
+      <TextInput
+            multiline
+            onChangeText={setTodo}
+            value={todo}
+            placeholder="할 일을 작성해주세요."
+            style={{
+              flex:0.3, 
+              padding: 10, 
+              backgroundColor: "#fff",
+              borderRadius: 10, 
+              borderWidth: 2, 
+              margin: 10 
+            }}
+      />
+      <Pressable
+        onPress={() => {
+          navigation.navigate("Detail", { todo });
+          setTodo(''); // 입력 필드 초기화
+        }}
+        >
+          <Text
+            style={{
+          padding: 10,
+          backgroundColor: "#fff",
+          borderRadius: 10,
+          borderWidth: 2,
+          width: "30%",
+          textAlign: "center",
+          fontWeight: "bold",
+          margin: 10,
+        }}
+          > 작성
+          </Text>
+      </Pressable>
+    </>
+  )
 }
 
-const DetailScreen = ({ navigation }) => {
+const DetailScreen = ({ navigation, route }) => {
+  const todo = route?.params?.todo ?? '(내용 없음)';
+
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text style = {{fontSize: 40, fontWeight: "bold" }}>상세 화면</Text>
+      <Text> 작성 내용: {todo}</Text>
       <Button
         title="홈으로 이동"
         onPress={() => {
           // 네비게이션을 통해 Detail 화면으로 이동
-          navigation.push('Detail');
+          navigation.navigate('Home');
         }}
       />
     </View>
@@ -43,6 +97,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Home'>
           <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="TodoWrite" component={TodoWriteScreen} />
           <Stack.Screen name="Detail" component={DetailScreen} />
       </Stack.Navigator>
     </NavigationContainer>
