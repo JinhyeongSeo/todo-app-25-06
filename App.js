@@ -15,6 +15,9 @@ import {
   useNavigation,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Entypo from "@expo/vector-icons/Entypo";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -110,11 +113,13 @@ const DetailScreen = ({ navigation, route }) => {
 };
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home" screenOptions={{
+      {/* <Stack.Navigator initialRouteName="Home" 
+      screenOptions={{
         headerStyle: {
               backgroundColor: "#f4511e",
             },
@@ -136,7 +141,55 @@ export default function App() {
         />
         <Stack.Screen name="TodoWrite" component={TodoWriteScreen} />
         <Stack.Screen name="Detail" component={DetailScreen} />
-      </Stack.Navigator>
+      </Stack.Navigator> */}
+      <Tab.Navigator
+        screenOptions={{
+          tabBarLabelStyle: {
+            fontSize: 12,
+            paddingBottom: 10,
+            fontWeight: "bold",
+          },
+          tabBarStyle: {
+            height: 60,
+          },
+          tabBarInactiveTintColor: "#0163d2",
+          tabBarActiveTintColor: "black",
+          headerRight: () => (
+            <Pressable onPress={() => alert("클릭됨!!")}>
+              <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>
+                Menu
+              </Text>
+            </Pressable>
+          ),
+        }}
+      >
+        <Tab.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            title: "메인 홈",
+            tabBarIcon: ({ focused }) => (
+              <Entypo name="home" 
+              size={24} 
+              color="black" />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="TodoWrite"
+          component={TodoWriteScreen}
+          options={{
+            name: "할 일 작성",
+            tabBarIcon: ({ focused }) => (
+              <MaterialCommunityIcons
+                name="square-edit-outline"
+                size={30}
+                color="black"
+              />
+            ),
+          }}
+        />
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }
