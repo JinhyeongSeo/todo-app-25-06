@@ -1,10 +1,11 @@
 import {Text,View, TextInput, Pressable, StyleSheet} from "react-native";
 import React, { useState } from "react";
+import TodosContext from "../components/TodosProvider"; // TodosContext를 가져옵니다.
 
-const TodoWriteScreen = ({ navigation, route }) => {
+const TodoWriteScreen = ({ navigation }) => {
   const [todo, setTodo] = useState("");
 
-  const {addTodo} = route.params.todosState;
+  const {addTodo} = React.useContext(TodosContext);
 
   const handleAddTodo = () => {
     if (!todo.trim()) {

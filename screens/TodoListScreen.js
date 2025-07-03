@@ -1,8 +1,9 @@
 import {Text,View, StyleSheet} from "react-native";
 import React from "react";
+import TodosContext from "../components/TodosProvider"; // TodosContext를 가져옵니다.
 
 const TodoListScreen = ({route}) => {
-  const { todos } = route.params?.todosState || { todos: [] };
+  const { todos } = React.useContext(TodosContext); // TodosContext에서 todos를 가져옵니다.
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -23,11 +24,11 @@ const TodoListScreen = ({route}) => {
 
 const styles = StyleSheet.create({
   listBox: {
-    backgroundColor: "red",
     width: "90%",
     borderWidth: 2,
     padding: 10,
     borderRadius: 10,
+    marginTop: 5,
     }
 });
 

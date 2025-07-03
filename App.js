@@ -1,42 +1,16 @@
 import React from "react";
 import { StatusBar } from "expo-status-bar";
 import {StyleSheet,} from "react-native";
-import {
-  createStaticNavigation,
-  NavigationContainer,
-  useNavigation,
-} from "@react-navigation/native";
+import {createStaticNavigation, NavigationContainer, useNavigation,} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
 import tabConfig from "./configs/tabConfigs";
-import { dateToStr } from "./utils/util";
-
-const useTodosState = () => {
-  const [todos, setTodos] = React.useState([]);
-  const lastTodoIdRef = React.useRef(0);
-
-  const addTodo = (newContent) => {
-    const id = ++lastTodoIdRef.current;
-    const newTodo = {
-      id,
-      content: newContent,
-      regDate: dateToStr(new Date()),
-    }
-
-    const newTodos = [...todos, newTodo];
-    setTodos(newTodos);
-  };
-
-  return { todos, addTodo};
-}
+import {TodosProvider} from "./components/TodosProvider";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export default function App() {
-const todosState = useTodosState();
-
 
   const screenOptions = ({ route }) => ({
     tabBarIcon: ({focused, color, size}) => {
@@ -75,7 +49,8 @@ const todosState = useTodosState();
   })
 
   return (
-    <NavigationContainer>
+    <TodosProvider>
+      <NavigationContainer>
       <Tab.Navigator
         screenOptions={screenOptions}
       >
@@ -85,11 +60,11 @@ const todosState = useTodosState();
             name={routeConfig.name}
             component={routeConfig.component}
             options={{ title: routeConfig.title }}
-            initialParams={{ todosState }}
           />
         ))}
       </Tab.Navigator>
     </NavigationContainer>
+    </TodosProvider>
   );
 }
 
