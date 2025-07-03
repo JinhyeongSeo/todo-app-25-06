@@ -1,31 +1,10 @@
 import {Text,View, TextInput, Pressable, StyleSheet} from "react-native";
 import React, { useState } from "react";
-import { dateToStr } from "../utils/util";
-
-
-const useTodoState = () => {
-  const [todos, setTodos] = useState([]);
-  const lastTodoIdRef = React.useRef(0);
-
-  const addTodo = (newContent) => {
-    const id = ++lastTodoIdRef.current;
-    const newTodo = {
-      id,
-      content: newContent,
-      regDate: dateToStr(new Date()),
-    }
-
-    const newTodos = [...todos, newTodo];
-    setTodos(newTodos);
-  };
-
-  return {addTodo};
-}
 
 const TodoWriteScreen = ({ navigation, route }) => {
   const [todo, setTodo] = useState("");
 
-  const {addTodo} = useTodoState();
+  const {addTodo} = route.params.todosState;
 
   const handleAddTodo = () => {
     if (!todo.trim()) {
@@ -35,7 +14,7 @@ const TodoWriteScreen = ({ navigation, route }) => {
     }
 
     addTodo(todo);
-    navigation.navigate("TodoList", { todo });
+    navigation.navigate("TodoList");
     setTodo(""); // 입력 필드 초기화
 
   }
