@@ -1,8 +1,58 @@
 import {Text,View, TextInput, Pressable, StyleSheet} from "react-native";
 import React, { useState } from "react";
 
+function dateToStr(date) {
+  const pad = (n) => {
+    return n < 10 ? `0${n}` : n;
+  };
+
+  return (
+    date.getFullYear() +
+    "-" + pad(date.getMonth() + 1) +
+    "-" + pad(date.getDate()) +
+    " " + pad(date.getHours()) + 
+    ":" + pad(date.getMinutes()) +
+    ":" + pad(date.getSeconds()
+    )
+  )
+}
+
+const useTodoState = () => {
+  const [todos, setTodos] = useState([]);
+  const lastTodoIdRef = React.useRef(0);
+
+  const addTodo = (newContent) => {
+    const id = ++lastTodoIdRef.current;
+    const newTodo = {
+      id,
+      content: newContent,
+      regDate: dateToStr(new Date()),
+    }
+
+    const newTodos = [...todos, newTodo];
+    setTodos(newTodos);
+  };
+
+  return {addTodo};
+}
+
 const TodoWriteScreen = ({ navigation, route }) => {
   const [todo, setTodo] = useState("");
+
+  const {addTodo} = useTodoState();
+
+  const handleAddTodo = () => {
+    if (!todo.trim()) {
+      // 입력이 비어있거나 공백만 있는 경우
+      alert("할 일을 입력해주세요.");
+      return;
+    }
+
+    addTodo(todo);
+    navigation.navigate("TodoList", { todo });
+    setTodo(""); // 입력 필드 초기화
+
+  }
 
   return (
     <>
@@ -21,10 +71,7 @@ const TodoWriteScreen = ({ navigation, route }) => {
         marginRight: 10,}}>
         <Pressable
         style={styles.PressableBtn}
-        onPress={() => {
-          navigation.navigate("TodoList", { todo });
-          setTodo(""); // 입력 필드 초기화
-        }}
+        onPress={handleAddTodo}
       >
         <Text style={styles.text}>작성</Text>
       </Pressable>
