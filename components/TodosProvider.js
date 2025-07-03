@@ -38,14 +38,15 @@ export const TodosProvider = ({children}) => {
     };
 
     const removeTodo = (id) => {
+        const newTodos = todos.filter((todo) => todo.id != id);
+        setTodos(newTodos);
+    };
 
+    return (
+        <TodosContext.Provider value={{ todos, addTodo, removeTodo }}>
+        {children}
+        </TodosContext.Provider>
+    );
     }
 
-  return (
-      <TodosContext.Provider value={{ todos, addTodo }}>
-        {children}
-      </TodosContext.Provider>
-    );
-  }
-
-  export default TodosContext;
+export default TodosContext;
