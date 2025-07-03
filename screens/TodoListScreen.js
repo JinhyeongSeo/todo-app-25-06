@@ -1,35 +1,74 @@
-import {Text,View, StyleSheet} from "react-native";
+import {Text,View, StyleSheet, Pressable} from "react-native";
 import React from "react";
 import TodosContext from "../components/TodosProvider"; // TodosContext를 가져옵니다.
+import { ListItem, Icon} from "@rneui/base";
 
 const TodoListScreen = ({route}) => {
   const { todos } = React.useContext(TodosContext); // TodosContext에서 todos를 가져옵니다.
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View style={styles.todoListContainer}>
       {todos.length > 0? (
         todos.map((todo) => (
-        <View key={todo.id} style={styles.listBox}>
-          <Text>번호: {todo.id}</Text>
-          <Text>작성날짜: {todo.regDate}</Text>
-          <Text>할 일: {todo.content}</Text>
+        <View key={todo.id} style={{marginTop: 5}}>
+          <ListItem.Swipeable
+            style={styles.listBox}
+            leftContent={(reset) => (
+              <Pressable
+                style={{...styles.pressableBtn, backgroundColor: "blue"}}
+                onPress={() => reset()}
+              >
+                <Icon name="update" color={"white"} />
+                <Text style={styles.btnText}>수정</Text>
+              </Pressable>
+            )}
+            rightContent={(reset) => (
+              <Pressable
+                style={{...styles.pressableBtn, backgroundColor: "red"}}
+                onPress={() => reset()}
+              >
+                <Icon name="delete" color={"white"} />
+                <Text style={styles.btnText}>삭제</Text>
+              </Pressable>
+            )}
+          >
+            <ListItem.Content>
+              <ListItem.Title>번호: {todo.id}</ListItem.Title>
+              <ListItem.Subtitle>작성날짜: {todo.regDate}</ListItem.Subtitle>
+              <ListItem.Subtitle>할 일: {todo.content}</ListItem.Subtitle>
+            </ListItem.Content>
+          </ListItem.Swipeable>
         </View>
       ))
       ) : (
-        <Text style={{fontSize: 20, fontWeight: "bold"}}>할 일이 없습니다.</Text>
+        <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+          <Text style={{fontSize: 20, fontWeight: "bold"}}>
+            할 일이 없습니다.
+            </Text>
+        </View>
       )}
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  todoListContainer: {
+    flex: 1,
+    backgroundColor: "#fff",
+    margin: 10,
+  },
   listBox: {
-    width: "90%",
     borderWidth: 2,
-    padding: 10,
-    borderRadius: 10,
-    marginTop: 5,
-    }
+    },
+  pressableBtn: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  btnText: {
+    color: "#fff",
+    fontWeight: "bold",
+  }
 });
 
 
