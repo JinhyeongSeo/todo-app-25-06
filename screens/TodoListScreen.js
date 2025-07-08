@@ -1,7 +1,7 @@
-import {Text,View, StyleSheet, Pressable, Alert, Modal} from "react-native";
+import {Text,View, StyleSheet, Pressable, Alert, Modal, TextInput} from "react-native";
 import React from "react";
 import TodosContext from "../components/TodosProvider"; // TodosContext를 가져옵니다.
-import { ListItem, Icon} from "@rneui/base";
+import { ListItem, Icon } from "@rneui/base";
 
 const TodoListScreen = ({route}) => {
     const [modalVisible, setModalVisible] = React.useState(false);
@@ -84,7 +84,9 @@ const TodoListScreen = ({route}) => {
           }}>
           <Pressable onPress={closeModifyModal} style={styles.modalContainer}>
             <Pressable style={styles.modalBox}>
-              <Text style={{ fontSize: 30 }}>수정 모달</Text>
+              <View style={styles.modalInner}>
+                <TextInput style={styles.modifyInput} placeholder="수정할 일을 입력해주세요."></TextInput>
+              </View>
             </Pressable>
           </Pressable>
         </Modal>
@@ -132,7 +134,12 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     justifyContent: 'center',
-  }
+  },
+  modifyInput: {
+    padding: 10,
+    fontSize: 20,
+  },
+
 });
 
 
