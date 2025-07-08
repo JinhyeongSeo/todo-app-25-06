@@ -4,15 +4,19 @@ import TodosContext from "../components/TodosProvider"; // TodosContext를 가�
 import { ListItem, Icon } from "@rneui/base";
 
 const TodoListScreen = ({route}) => {
-    const [modalVisible, setModalVisible] = React.useState(false);
+  const [modalVisible, setModalVisible] = React.useState(false);
   const { todos, removeTodo } = React.useContext(TodosContext); // TodosContext에서 todos를 가져옵니다.
+  const [modifiedContent, setModifiedContent] = React.useState("");
 
-  const openModifyModal = (reset) => {
+
+  const openModifyModal = (todo, reset) => {
+    setModifiedContent(todo.content); // 수정할 내용을 설정합니다.
     reset();
     setModalVisible(true);
   }
 
   const closeModifyModal = () => {
+    setModifiedContent(modifiedContent)
     setModalVisible(false);
   }
 
@@ -44,7 +48,7 @@ const TodoListScreen = ({route}) => {
             leftContent={(reset) => (
               <Pressable
                 style={{...styles.pressableBtn, backgroundColor: "blue"}}
-                onPress={() => openModifyModal(reset)}
+                onPress={() => openModifyModal(todo,reset)}
               >
                 <Icon name="update" color={"white"} />
                 <Text style={styles.btnText}>수정</Text>
@@ -85,7 +89,13 @@ const TodoListScreen = ({route}) => {
           <Pressable onPress={closeModifyModal} style={styles.modalContainer}>
             <Pressable style={styles.modalBox}>
               <View style={styles.modalInner}>
-                <TextInput style={styles.modifyInput} placeholder="수정할 일을 입력해주세요."></TextInput>
+                <TextInput 
+                multiline
+                style={styles.modifyInput} 
+                placeholder="수정할 일을 입력해주세요."
+                value={modifiedContent}
+                onChange={setModifiedContent}
+                />
               </View>
             </Pressable>
           </Pressable>
