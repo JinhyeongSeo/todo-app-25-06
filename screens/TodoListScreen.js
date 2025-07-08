@@ -1,10 +1,20 @@
-import {Text,View, StyleSheet, Pressable, Alert} from "react-native";
+import {Text,View, StyleSheet, Pressable, Alert, Modal} from "react-native";
 import React from "react";
 import TodosContext from "../components/TodosProvider"; // TodosContext를 가져옵니다.
 import { ListItem, Icon} from "@rneui/base";
 
 const TodoListScreen = ({route}) => {
+    const [modalVisible, setModalVisible] = React.useState(false);
   const { todos, removeTodo } = React.useContext(TodosContext); // TodosContext에서 todos를 가져옵니다.
+
+  const openModifyModal = (reset) => {
+    reset();
+    setModalVisible(true);
+  }
+
+  const closeModifyModal = () => {
+    setModalVisible(false);
+  }
 
   const handleRemoveTodo = (id, reset) => {
     Alert.alert('삭제 확인', '정말 삭제하시겠습니까?', [
@@ -34,7 +44,7 @@ const TodoListScreen = ({route}) => {
             leftContent={(reset) => (
               <Pressable
                 style={{...styles.pressableBtn, backgroundColor: "blue"}}
-                onPress={() => reset()}
+                onPress={() => openModifyModal(reset)}
               >
                 <Icon name="update" color={"white"} />
                 <Text style={styles.btnText}>수정</Text>
@@ -65,6 +75,19 @@ const TodoListScreen = ({route}) => {
             </Text>
         </View>
       )}
+       <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}>
+          <Pressable onPress={closeModifyModal} style={styles.modalContainer}>
+            <Pressable style={styles.modalBox}>
+              <Text style={{ fontSize: 30 }}>수정 모달</Text>
+            </Pressable>
+          </Pressable>
+        </Modal>
     </View>
   )
 }
@@ -86,6 +109,29 @@ const styles = StyleSheet.create({
   btnText: {
     color: "#fff",
     fontWeight: "bold",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalBox: {
+    width: "80%",
+    minHeight: 250,
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    justifyContent: 'center',
   }
 });
 
