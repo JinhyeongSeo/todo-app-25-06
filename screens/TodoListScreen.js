@@ -50,7 +50,14 @@ const TodoListScreen = ({route}) => {
     <View style={styles.todoListContainer}>
       {todos.length > 0? (
         todos.map((todo) => (
-        <View key={todo.id} style={{marginTop: 5}}>
+        <View key={todo.id} 
+        style={{
+          marginVertical: 5, //margin y축
+          marginHorizontal: 10, //margin x축
+          borderWidth: 2, 
+          borderRadius: 10, 
+          overflow: "hidden",
+          }}>
           <ListItem.Swipeable
             bottomDivider
             style={styles.listBox}
@@ -127,10 +134,9 @@ const styles = StyleSheet.create({
   todoListContainer: {
     flex: 1,
     backgroundColor: "#fff",
-    margin: 10,
   },
   listBox: {
-    borderWidth: 2,
+    
     },
   pressableBtn: {
     flex: 1,
