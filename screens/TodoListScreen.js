@@ -7,11 +7,15 @@ import {
   Modal, 
   TextInput, 
   TouchableOpacity,
-  FlatList
+  FlatList,
+  Dimensions,
+  ScrollView
 } from "react-native";
 import React from "react";
 import TodosContext from "../components/TodosProvider"; // TodosContext를 가져옵니다.
 import { ListItem, Icon } from "@rneui/base";
+
+const {width, height} = Dimensions.get("window");
 
 const TodoModifyModal = ({ 
   modalVisible, 
@@ -31,16 +35,16 @@ const TodoModifyModal = ({
           }}>
           <Pressable onPress={closeModal} style={styles.modalContainer}>
             <Pressable style={styles.modalBox}>
-              <View style={styles.modalInner}>
-                <View style={{flexGrow: 1,}}>
-                  <TextInput 
+              <ScrollView style={styles.modalInner}>
+                <TextInput 
                     multiline
+                    maxLength={100}
                     style={styles.modifyInput} 
                     placeholder="수정할 일을 입력해주세요."
                     value={modifiedContent}
                     onChangeText={setModifiedContent}
                   />
-                </View>
+                </ScrollView>
                 <View style={styles.modalBtnBox}>
                   <TouchableOpacity onPress={onModifyTodo}>
                     <Text style={styles.modalBtnText}>수정</Text>
@@ -49,7 +53,6 @@ const TodoModifyModal = ({
                     <Text style={styles.modalBtnText}>취소</Text>
                   </TouchableOpacity>
                 </View>
-              </View>
             </Pressable>
           </Pressable>
         </Modal>
@@ -204,9 +207,9 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalBox: {
-    width: "80%",
-    minHeight: 250,
-    backgroundColor: "white",
+    flex: 0.4,
+    width: width * 0.8,
+    backgroundColor: "#fff",
     borderRadius: 10,
     borderWidth: 3,
   },
@@ -215,12 +218,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   modalInner: {
-    flex: 1,
-    justifyContent: "space-between",
-    padding: 10,
   },
   modalBtnBox: {
-    height: 60,
+    paddingVertical: 20,
     justifyContent: "flex-end",
     flexDirection: "row",
     alignItems: "center",
