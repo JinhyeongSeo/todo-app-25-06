@@ -1,4 +1,14 @@
-import {Text,View, StyleSheet, Pressable, Alert, Modal, TextInput, TouchableOpacity} from "react-native";
+import {
+  Text,
+  View, 
+  StyleSheet, 
+  Pressable, 
+  Alert, 
+  Modal, 
+  TextInput, 
+  TouchableOpacity,
+  FlatList
+} from "react-native";
 import React from "react";
 import TodosContext from "../components/TodosProvider"; // TodosContext를 가져옵니다.
 import { ListItem, Icon } from "@rneui/base";
@@ -48,7 +58,7 @@ const TodoModifyModal = ({
 
 const TodoListItem = ({ todo, onModifyTodo, onRemoveTodo }) => {
   return (
-    <View key={todo.id} 
+      <View 
         style={{
           marginVertical: 5, //margin y축
           marginHorizontal: 10, //margin x축
@@ -134,9 +144,17 @@ const TodoListScreen = () => {
   return (
     <View style={styles.todoListContainer}>
       {todos.length > 0? (
-        todos.map((todo) => (
-          <TodoListItem todo={todo} onModifyTodo={openModifyModal} onRemoveTodo={handleRemoveTodo} />
-      ))
+        <FlatList
+          data={todos}
+          renderItem={({item}) => (
+            <TodoListItem 
+              todo={item} 
+              onModifyTodo={openModifyModal} 
+              onRemoveTodo={handleRemoveTodo} 
+            />
+            )}
+            keyExtractor={item => item.id.toString()}
+          />
       ) : (
         <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
           <Text style={{fontSize: 20, fontWeight: "bold"}}>
