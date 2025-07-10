@@ -1,11 +1,14 @@
-import {Text,View, TextInput, Pressable, StyleSheet} from "react-native";
+import {Text, View, TextInput, Pressable, StyleSheet, Dimensions} from "react-native";
 import React, { useState } from "react";
 import TodosContext from "../components/TodosProvider"; // TodosContext를 가져옵니다.
+import AppLoadingContext from "../components/AppLoadingProvider";
+
+const {width, height} = Dimensions.get("window");
 
 const TodoWriteScreen = ({ navigation }) => {
   const [todo, setTodo] = useState("");
-
   const {addTodo} = React.useContext(TodosContext);
+  const {fontsLoaded} = React.useContext(AppLoadingContext);
 
   const handleAddTodo = () => {
     if (!todo.trim()) {
@@ -22,13 +25,15 @@ const TodoWriteScreen = ({ navigation }) => {
 
   return (
     <>
-      <TextInput
-        multiline
-        onChangeText={setTodo}
-        value={todo}
-        placeholder="할 일을 작성해주세요."
-        style={styles.inputBox}
-      />
+      <View style={styles.inputBox}>
+        <TextInput
+          multiline
+          onChangeText={setTodo}
+          value={todo}
+          placeholder="할 일을 작성해주세요."
+          style={styles.textInput}
+          />
+      </View>
       <View style={{ 
         flexDirection: "row", 
         gap: 5, 
@@ -57,15 +62,19 @@ const TodoWriteScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     inputBox: {
-        minHeight: 200,
+        minHeight: height * 0.2,
         padding: 10,
         backgroundColor: "#fff",
         borderRadius: 10,
         borderWidth: 2,
         margin: 10,
         fontSize: 20,
-        fontWeight: "bold",
     },
+  textInput: {
+      fontSize: 20,
+      fontFamily: "gmarket-font",
+      fontWeight: "bold",
+  },
     PressableBtn: {
         width: "50%",
         padding: 10,
@@ -79,6 +88,7 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 20,
         fontWeight: "bold",
+        fontFamily:"gmarket-font"
     }
 });
 

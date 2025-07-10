@@ -14,6 +14,7 @@ import {
 import React from "react";
 import TodosContext from "../components/TodosProvider"; // TodosContext를 가져옵니다.
 import { ListItem, Icon } from "@rneui/base";
+import AppLoadingContext from "../components/AppLoadingProvider";
 
 const {width, height} = Dimensions.get("window");
 
@@ -61,6 +62,7 @@ const TodoModifyModal = ({
 
 const TodoListItem = ({ todo, onModifyTodo, onRemoveTodo }) => {
   const [isExpanded, setIsExpanded] = React.useState(false); // 내용 확장 상태 관리
+  const { fontsLoaded } = React.useContext(TodosContext);
 
   const toggleExpand = () => {
       setIsExpanded(!isExpanded);
@@ -216,6 +218,7 @@ const styles = StyleSheet.create({
   modifyInput: {
     padding: 10,
     fontSize: 20,
+    fontFamily: "gmarket-font",
   },
   modalInner: {
   },
@@ -230,6 +233,7 @@ const styles = StyleSheet.create({
   modalBtnText: {
     fontSize: 18,
     fontWeight: "bold",
+    fontFamily: "gmarket-font",
   }
 });
 
