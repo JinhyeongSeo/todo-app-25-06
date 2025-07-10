@@ -11,8 +11,6 @@ import * as Font from "expo-font";
 
 const { width, height } = Dimensions.get("window");
 
-SplashScreen.preventAutoHideAsync();
-
 const fetchFonts = () => {
   return Font.loadAsync({
     "gmarket-font": require("./assets/fonts/GmarketSansTTFMedium.ttf"),
@@ -42,13 +40,16 @@ export default function App() {
     const loadFonts = async () => {
       try {
         await fetchFonts(); // 폰트 로드
+        await new Promise((resolve) => setTimeout(resolve, 2000))
       } catch (e) {
         console.warn(e); // 폰트 로드 중 오류 발생시 경고
       } finally {
         setFontsLoaded(true);
-        SplashScreen.hideAsync(); // 폰트 로드가 완료되면 스플래시 스크린을 숨겨줌
+        await SplashScreen.hideAsync(); // 폰트 로드가 완료되면 스플래시 스크린을 숨겨줌
       }
     };
+
+    SplashScreen.preventAutoHideAsync();
 
     loadFonts();
   }, []);
