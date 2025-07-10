@@ -1,11 +1,26 @@
 import React from "react";
-import { StatusBar } from "expo-status-bar";
-import {StyleSheet,} from "react-native";
+import {StyleSheet, Text, View, StatusBar, Dimensions } from "react-native";
 import {createStaticNavigation, NavigationContainer, useNavigation,} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import tabConfig from "./configs/tabConfigs";
 import {TodosProvider} from "./components/TodosProvider";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+const { width, height } = Dimensions.get("window");
+
+const CustomHeader = ({ title }) => {
+  return (
+    <>
+      <SafeAreaView style={styles.safeArea}>
+        <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+        <View style={styles.headerBox}>
+          <Text style={styles.headerTitle}>{title}</Text>
+        </View>
+      </SafeAreaView>
+    </>
+  );
+};
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -59,7 +74,10 @@ export default function App() {
             key={routeConfig.name}
             name={routeConfig.name}
             component={routeConfig.component}
-            options={{ title: routeConfig.title }}
+            options={{ 
+              title: routeConfig.title,
+              header: () => <CustomHeader title={routeConfig.title} />,
+            }}
           />
         ))}
       </Tab.Navigator>
@@ -75,4 +93,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  headerBox: {
+    height: height * 0.05,
+    backgroundColor: "#fff",
+    alignItems: "flex-end",
+    justifyContent: "center",
+  },
+  headerTitle: {
+    fontSize: 25,
+    fontWeight: "bold",
+    marginRight: 15,
+  }
 });
