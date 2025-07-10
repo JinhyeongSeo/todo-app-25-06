@@ -8,14 +8,9 @@ import {TodosProvider} from "./components/TodosProvider";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
+import AppLoadingContext, {AppLoadingProvider} from "./components/AppLoadingProvider";
 
 const { width, height } = Dimensions.get("window");
-
-const fetchFonts = () => {
-  return Font.loadAsync({
-    "gmarket-font": require("./assets/fonts/GmarketSansTTFMedium.ttf"),
-  })
-}
 
 const CustomHeader = ({ title }) => {
   return (
@@ -33,29 +28,11 @@ const CustomHeader = ({ title }) => {
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-export default function App() {
-  const [fontsLoaded, setFontsLoaded] = React.useState(false);
-
-  React.useEffect(() => {
-    const loadFonts = async () => {
-      try {
-        await fetchFonts(); // 폰트 로드
-        await new Promise((resolve) => setTimeout(resolve, 2000))
-      } catch (e) {
-        console.warn(e); // 폰트 로드 중 오류 발생시 경고
-      } finally {
-        setFontsLoaded(true);
-        await SplashScreen.hideAsync(); // 폰트 로드가 완료되면 스플래시 스크린을 숨겨줌
-      }
-    };
-
-    SplashScreen.preventAutoHideAsync();
-
-    loadFonts();
-  }, []);
+const AppWithNavigation = () => {
+  const {fontsLoaded} = React.useContext(AppLoadingContext);
 
   if (!fontsLoaded) {
-    return null; // 또는 로딩 스피너를 표시할 수 있습니다.
+    return null;
   }
 
   const screenOptions = ({ route }) => ({
@@ -83,30 +60,27 @@ export default function App() {
       shadowRadius: 4,
     },
     tabBarLabelStyle: {
-            fontSize: 12,
-            paddingBottom: 10,
-            fontWeight: "bold",
-            fontFamily: "gmarket-font",
-          },
-          tabBarStyle: {
-            height: "8%",
-          },
-          tabBarInactiveTintColor: "#0163d2",
-          tabBarActiveTintColor: "black",
+      fontSize: 12,
+      paddingBottom: 10,
+      fontWeight: "bold",
+      fontFamily: "gmarket-font",
+    },
+    tabBarStyle: {
+      height: "8%",
+    },
+    tabBarInactiveTintColor: "#0163d2",
+    tabBarActiveTintColor: "black",
   })
 
   return (
-    <TodosProvider>
-      <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={screenOptions}
-      >
+    <NavigationContainer>
+      <Tab.Navigator screenOptions={screenOptions}>
         {tabConfig.map((routeConfig) => (
           <Tab.Screen
             key={routeConfig.name}
             name={routeConfig.name}
             component={routeConfig.component}
-            options={{ 
+            options={{
               title: routeConfig.title,
               header: () => <CustomHeader title={routeConfig.title} />,
             }}
@@ -114,7 +88,18 @@ export default function App() {
         ))}
       </Tab.Navigator>
     </NavigationContainer>
-    </TodosProvider>
+  );
+}
+
+export default function App() {
+  const [fontsLoaded, setFontsLoaded] = React.useState(false);
+
+  return (
+    <AppLoadingProvider>
+      <TodosProvider>
+        <AppWithNavigation />
+      </TodosProvider>
+    </AppLoadingProvider>
   );
 }
 
