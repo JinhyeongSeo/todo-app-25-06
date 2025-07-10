@@ -6,8 +6,18 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import tabConfig from "./configs/tabConfigs";
 import {TodosProvider} from "./components/TodosProvider";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as SplashScreen from "expo-splash-screen";
+import * as Font from "expo-font";
 
 const { width, height } = Dimensions.get("window");
+
+SplashScreen.preventAutoHideAsync();
+
+const fetchFonts = () => {
+  return Font.loadAsync({
+    "gmarket-font": require("./assets/fonts/GmarketSansTTFMedium.ttf"),
+  })
+}
 
 const CustomHeader = ({ title }) => {
   return (
@@ -26,18 +36,38 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export default function App() {
+  const [fontsLoaded, setFontsLoaded] = React.useState(false);
+
+  React.useEffect(() => {
+    const loadFonts = async () => {
+      try {
+        await fetchFonts(); // 폰트 로드
+      } catch (e) {
+        console.warn(e); // 폰트 로드 중 오류 발생시 경고
+      } finally {
+        setFontsLoaded(true);
+        SplashScreen.hideAsync(); // 폰트 로드가 완료되면 스플래시 스크린을 숨겨줌
+      }
+    };
+
+    loadFonts();
+  }, []);
+
+  if (!fontsLoaded) {
+    return null; // 또는 로딩 스피너를 표시할 수 있습니다.
+  }
 
   const screenOptions = ({ route }) => ({
     tabBarIcon: ({focused, color, size}) => {
       const routeConfig = tabConfig.find((config) => config.name === route.name);
 
       const iconName = focused ? routeConfig.focusedIcon : routeConfig.unfocusedIcon;
-      const IconComponet = routeConfig.iconComponet;
+      const IconComponent = routeConfig.iconComponent;
 
-      return <IconComponet name={iconName} size={size} color={color} />;
+      return <IconComponent name={iconName} size={size} color={color} />;
     },
     headerTitleAlign: "center",
-    headerTItleStyle: {
+    headerTitleStyle: {
       fontSize: 23,
       fontWeight: "bold",
     },
@@ -55,6 +85,7 @@ export default function App() {
             fontSize: 12,
             paddingBottom: 10,
             fontWeight: "bold",
+            fontFamily: "gmarket-font",
           },
           tabBarStyle: {
             height: "8%",

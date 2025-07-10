@@ -13,7 +13,7 @@ const tabConfig = [
       component: HomeScreen,
       focusedIcon: "home-variant",
       unfocusedIcon: "home-variant-outline",
-      iconComponet: MaterialCommunityIcons,
+      iconComponent: MaterialCommunityIcons,
     },
     {
       name: "TodoSearch",
@@ -21,7 +21,7 @@ const tabConfig = [
       component: TodoSearchScreen,
       focusedIcon: "search-sharp",
       unfocusedIcon: "search-outline",
-      iconComponet: Ionicons,
+      iconComponent: Ionicons,
     },
     {
       name: "TodoWrite",
@@ -29,7 +29,7 @@ const tabConfig = [
       component: TodoWriteScreen,
       focusedIcon: "application-edit",
       unfocusedIcon: "application-edit-outline",
-      iconComponet: MaterialCommunityIcons,
+      iconComponent: MaterialCommunityIcons,
     },
     {
       name: "TodoList",
@@ -37,7 +37,7 @@ const tabConfig = [
       component: TodoListScreen,
       focusedIcon: "list-sharp",
       unfocusedIcon: "list-outline",
-      iconComponet: Ionicons,
+      iconComponent: Ionicons,
     },
     {
       name: "MyPage",
@@ -45,7 +45,7 @@ const tabConfig = [
       component: MyPageScreen,
       focusedIcon: "person-circle-sharp",
       unfocusedIcon: "person-circle-outline",
-      iconComponet: Ionicons,
+      iconComponent: Ionicons,
     },
   ]
 
